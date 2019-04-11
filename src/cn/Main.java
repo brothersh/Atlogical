@@ -88,10 +88,6 @@ public class Main {
 
     }
 
-    public static void fuck(){
-        System.out.println("fuck");
-    }
-
 }
 
 class Solution {
