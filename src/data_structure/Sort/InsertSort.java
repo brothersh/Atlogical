@@ -12,7 +12,7 @@ public class InsertSort {
         for (int i = 1;i < list.length;i++){
             T cur = list[i];
             int j;
-            for (j = i-1;j >= 0 && cur.compareTo(list[j])==-1;j--)
+            for (j = i-1;j >= 0 && cur.compareTo(list[j]) < 0;j--)
                 list[j+1] = list[j];
             list[j+1] = cur;
         }

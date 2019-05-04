@@ -1,7 +1,7 @@
 package data_structure.Tree;
 
-import data_structure.nodes.NormalTreeNode;
-import data_structure.nodes.TreeNode;
+import data_structure.Nodes.NormalTreeNode;
+import data_structure.Nodes.TreeNode;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

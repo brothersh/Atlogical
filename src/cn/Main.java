@@ -1,93 +1,17 @@
 package cn;
 
 
-import data_structure.nodes.ListNode;
-import data_structure.nodes.RandomListNode;
-import data_structure.nodes.TreeNode;
+import data_structure.Nodes.ListNode;
+import data_structure.Nodes.RandomListNode;
+import data_structure.Nodes.TreeNode;
 
 import java.util.*;
+import java.util.logging.Level;
 
 public class Main {
-
     public static void main(String[] args) {
-        int[][] p = {{0,1},{1,0}};
-        int[][] matrix = {{1,2,3,4,5}};
-        Solution solution = new Solution();
-        System.out.println(solution.InversePairs(new int[]{1,2,3,4,5,6,7,0}));
-    }
-
-    public static void _1(){
-        Scanner input = new Scanner(System.in);
-        int m = input.nextInt();
-        int n = input.nextInt();
-        int[] coins = new int[n];
-        for (int i = 0;i < n;i++){
-            coins[i] = input.nextInt();
-        }
-        Arrays.sort(coins);
-        if (coins[0] != 1){
-            System.out.println(-1);
-            return;
-        }
-        int[][] dp = new int[n][m+1];
-        for (int i = 1;i <= m;i++){
-            dp[0][i] = i;
-        }
-        for (int i = 1;i < n;i++){
-            for (int j = 1;j <= m;j++){
-                int cur = coins[i];
-                int min = Integer.MAX_VALUE;
-                for (int k = 1;k <= j/cur;k++){
-                    dp[i][j] = Math.min(min,dp[i][j-k*cur]+k);
-                }
-                min = Math.min(min,dp[i-1][j]);
-                dp[i][j] = min;
-            }
-        }
-        System.out.println(dp[n-1][m]);
-    }
-    public static void _2(){
-        Scanner input = new Scanner(System.in);
-        int len = input.nextInt();
-        int str = input.nextInt();
-        if (len == 0 || len == 1){
-            System.out.println(len);
-            return;
-        }
-        StringBuilder builder = new StringBuilder(str+"");
-        int gap = len - builder.toString().length();
-        int count0 = gap,count1 = 0;
-        for (int i = 0;i < builder.length();i++){
-            if (builder.charAt(i) == '0'){
-                count0++;
-            }else {
-                count1++;
-            }
-        }
-
-        System.out.println(len-2*Math.min(count0,count1));
-    }
-    public static void _3(){
-        Scanner input = new Scanner(System.in);
-        int n = input.nextInt();
-        int[] d = new int[n];
-        int[] p = new int[n];
-        for (int i = 0;i < n;i++){
-            d[i] = input.nextInt();
-        }
-        for (int i = 0;i < n;i++){
-            p[i] = input.nextInt();
-        }
-        int cur = d[0];
-        int total = p[0];
-        int[] dp = new int[n];
-        dp[0] = p[0];
-        for (int i = 1;i < n;i++){
-
-        }
 
     }
-
 }
 
 class Solution {
@@ -99,8 +23,8 @@ class Solution {
         int monthTicket = costs[2];
         int day = days[0];
         int countDay = 1;
-        travelCost[0] = 0;
-        travelCost[day] = dayTicket;
+//        travelCost[0] = 0;
+//        travelCost[day] = dayTicket;
         for (int i = day+1;i < travelCost.length;i++){
             if (days[countDay] != i){
                 travelCost[i] = travelCost[i-1];
@@ -300,6 +224,108 @@ class Solution {
             result += stack.pop();
         }
         return new StringBuilder(result).reverse().toString();
+    }
+    public int missingNumber(int[] nums) {
+        int n = nums.length;
+        int sum = 0;
+        for (int v: nums){
+            sum += v;
+        }
+        return (n+1)*n/2 - sum;
+    }
+    public int longestPalindrome(String s) {
+        Map<Character,Integer> map = new HashMap<>();
+        for (int i = 0;i < s.length();i++){
+            map.put(s.charAt(i),map.getOrDefault(s.charAt(i),0)+1);
+        }
+        int sum = 0;
+        boolean flag = false;
+        for (char c:map.keySet()){
+            int count = map.get(c);
+            sum += count;
+            if (count % 2 != 0){
+                if (!flag) flag = true;
+                else sum--;
+            }
+        }
+        return sum;
+    }
+    public String reverseVowels(String s) {
+        StringBuilder builder = new StringBuilder(s);
+        int i = -1,j = s.length();
+        Set<Character> set = new HashSet<>();
+        Character[] chs = {'a','e','i','o','u','A','E','I','O','U'};
+        Collections.addAll(set,chs);
+        while (true){
+            while (!set.contains(s.charAt(++i)) && i < s.length()-1);
+            while (!set.contains(s.charAt(--j)) && j > 0);
+            if (i >= j) break;
+            builder.insert(i,s.charAt(j));
+            builder.deleteCharAt(i+1);
+            builder.insert(j,s.charAt(i));
+            builder.deleteCharAt(j+1);
+        }
+        return builder.toString();
+    }
+    public int[] advantageCount(int[] A, int[] B) {
+        int n = A.length;
+        int[] res = new int[n];
+        boolean[] record = new boolean[n];
+        int index = 0;
+        Arrays.sort(A);
+        for (int i =  0;i < n;i++){
+            int j = 0;
+            while (j < n && (A[j] <= B[i] || record[j])) j++;
+            if (j < n){
+                res[i] = A[j];
+                record[j] = true;
+            }else {
+                while (record[index]) index++;
+                res[i] = A[index];
+                record[index] = true;
+            }
+        }
+        return res;
+    }
+    public String[] findWords(String[] words) {
+        String[] keys = {"qwertyuiop","asdfghjkl","zxcvbnm"};
+        Map<Character,Integer> map = new HashMap<>();
+        for (int i = 0;i < keys.length;i++){
+            for (int j = 0;j < keys[i].length();j++){
+                char ch = keys[i].charAt(j);
+                map.put(ch,i);
+                map.put(Character.toUpperCase(ch),i);
+            }
+        }
+        List<String> list = new ArrayList<>();
+        for (String s: words){
+            int flag = map.get(s.charAt(0));
+            boolean should = true;
+            for (int i = 1;i < s.length();i++){
+                if (flag != map.get(s.charAt(i))) {
+                    should = false;
+                    break;
+                }
+            }
+            if (should) list.add(s);
+        }
+        String[] res = new String[list.size()];
+        list.toArray(res);
+        return res;
+    }
+    public int minDistance(String word1, String word2) {
+        int n = word1.length(),m = word2.length();
+        int[][] dp = new int[n+1][m+1];
+        for (int i = 1;i < n;i++){
+            for (int j = 1;j < m;j++){
+                if (word1.charAt(i) == word2.charAt(j)){
+                    dp[i][j] = dp[i-1][j-1] + 1;
+                }else {
+                    dp[i][j] = Math.max(dp[i][j-1],dp[i-1][j]);
+                }
+            }
+        }
+        return n+m-2*dp[n-1][m-1];
     }
 
 
@@ -601,36 +627,349 @@ class Solution {
         }
         return (map.isEmpty())?-1:map.get(map.keySet().iterator().next());
     }
-    public int InversePairs(int [] array) {
-        int res = 0;
-        if (array.length  <= 1)
-            return 0;
-        int[] counts = new int[array.length];
-        for (int i = 1;i < array.length;i++){
-            if (array[i] < array[i-1]){
-                counts[i] = counts[i-1]+1;
-                res += counts[i];
-                continue;
+    public ListNode FindFirstCommonNode(ListNode pHead1, ListNode pHead2) {
+        Map<ListNode,Integer> map = new HashMap<>();
+        ListNode p = pHead1;
+        while (p != null){
+            map.putIfAbsent(p,1);
+            p = p.next;
+        }
+        p = pHead2;
+        while (p != null){
+            int res = map.getOrDefault(p,0);
+            if (res == 1){
+                return p;
             }
-            int j = i - 1;
-            while (j >= 0 && array[i] > array[j--]);
-            counts[i] = (j==-1)?0:counts[j+1]+1;
-            res += counts[i];
+            p = p.next;
+        }
+        return null;
+    }
+    public int GetNumberOfK(int [] array , int k) {
+        int min1 = 0,max1 = array.length;
+        int min2 = 0,max2 = array.length;
+        float less = k - 0.01f,more = k + 0.01f;
+        while (min1 < max1){
+            int mid = (min1+max1)/2;
+            if (array[mid] < less){
+                min1 = mid+1;
+            }else {
+                max1 = mid;
+            }
+        }
+        while (min2 < max2){
+            int mid = (min2+max2)/2;
+            if (array[mid] < more){
+                min2 = mid+1;
+            }else {
+                max2 = mid;
+            }
+        }
+        return min2-min1;
+    }
+    public int TreeDepth(TreeNode root) {
+        if (root == null){
+            return 0;
+        }else {
+            return Math.max(TreeDepth(root.left),TreeDepth(root.right))+1;
+        }
+    }
+    public boolean IsBalanced_Solution(TreeNode root) {
+        if (root == null){
+            return true;
+        }else {
+            return IsBalanced_Solution(root.left) && IsBalanced_Solution(root.right) && Math.abs(TreeDepth(root.left)-TreeDepth(root.right)) <= 1;
+        }
+    }
+    public void FindNumsAppearOnce(int [] array,int num1[] , int num2[]) {
+        int[] tmp = new int[array.length];
+        int res = 0;
+        for (int v:array){
+            res ^= v;
+        }
+        int n = Integer.toBinaryString(res).length()-1;
+        int begin = 0,last = array.length-1;
+        for (int v:array){
+            String s = Integer.toBinaryString(v >> n);
+            if (s.charAt(s.length()-1) == '1'){
+                tmp[begin++] = v;
+            }else {
+                tmp[last--] = v;
+            }
+        }
+        num1[0] = 0;
+        for (int i = 0;i < begin;i++){
+            num1[0] ^= tmp[i];
+        }
+        num2[0] = 0;
+        for (int i = begin;i < array.length;i++){
+            num2[0] ^= tmp[i];
+        }
+    }
+    public ArrayList<ArrayList<Integer> > FindContinuousSequence(int sum) {
+        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
+        int max = (int)(Math.sqrt(2*sum+0.25)-0.5);
+        for (int i = max;i >= 2;i++){
+            int begin = (2*sum/i-i+1);
+            if (2*sum % i != 0 || begin % 2 != 0)
+                continue;
+            begin /= 2;
+            ArrayList item = new ArrayList();
+            for (int j = 1;j <= i;j++){
+                item.add(begin++);
+            }
+            res.add(item);
         }
         return res;
     }
+    public ArrayList<Integer> FindNumbersWithSum(int [] array,int sum) {
+        ArrayList<Integer> res = new ArrayList<>();
+        if (array.length == 0 || sum-array[0] > array[array.length-1])
+            return res;
+        int i = 0,j = array.length-1;
+        while (i < j){
+            while (j > i && array[--j] > sum-array[i]);
+            if (array[j] == sum-array[i]){
+                res.add(array[i]);
+                res.add(array[j]);
+                break;
+            }
+        }
+        return res;
+    }
+    public String LeftRotateString(String str,int n) {
+        if (str.length() == 0 || n <= 0 || n % str.length() == 0) return str;
+        n %= str.length();
+        str += str.substring(0,n);
+        return str.substring(n);
+    }
+    public String ReverseSentence(String str) {
+        if (str == null || str.length() == 0)
+            return str;
+        String[] list = str.split(" ");
+        if (list.length == 0){
+            return str;
+        }
+        StringBuilder builder = new StringBuilder();
+        for (int i = list.length-1;i >= 0;i--){
+            builder.append(list[i]);
+            builder.append(" ");
+        }
+        builder.deleteCharAt(builder.length()-1);
+        return builder.toString();
+    }
+    public boolean isContinuous(int [] numbers) {
+        int count = 0,nums = 0,sub = 0;
+        Arrays.sort(numbers);
+        int index = -1;
+        while (numbers[++index] != 0);
+        count = index;
+        nums = 5-count;
+        for (int i = index+1;i < 5;i++){
+            sub += numbers[i]-numbers[i-1];
+        }
+        sub -= (nums-1);
+        if (sub <= 0) return false;
+        return sub <= count;
+
+    }
+    public int LastRemaining_Solution(int n, int m) {
+        LinkedList<Integer> queue = new LinkedList<>();
+        for (int i = 0;i < n;i++){
+            queue.addLast(i);
+        }
+        while (queue.size() != 1){
+            for (int i = m;i > 0;i--){
+                queue.addLast(queue.pollFirst());
+            }
+            queue.removeLast();
+        }
+        return queue.peekFirst();
+    }
+    public int Sum_Solution(int n) {
+        return (1+n)*n/2;
+    }
+    public int Add(int num1,int num2) {
+        int a = num1,b = num2;
+        while (b != 0){
+            int _a = a ^ b,_b = (a&b) << 1;
+            a = _a;
+            b = _b;
+        }
+        return a;
+    }
+    public int StrToInt(String str) {
+        if (str.length() == 0)
+            return 0;
+        Stack<Integer> stack = new Stack<Integer>();
+        int index = 0;
+        while (index < str.length() && str.charAt(index++) == 0);
+        if (index == str.length())
+            return 0;
+        str = str.substring(index-1);
+        boolean navigate = false;
+        for (int i = 0;i < str.length();i++){
+            char ch = str.charAt(i);
+            if (ch == '-' || ch == '+'){
+                navigate = ch == '-';
+            }
+            if (!Character.isDigit(ch))
+                return 0;
+            stack.push(ch-'0');
+        }
+        int q = 1,res = 0;
+        while (!stack.isEmpty()){
+            res += q * stack.pop();
+            q *= 10;
+        }
+        return (navigate)?-res:res;
+    }
+    public boolean duplicate(int numbers[],int length,int [] duplication) {
+        if (length == 0)
+            return false;
+        boolean[] flags = new boolean[length];
+        for (int i = 0;i < length;i++){
+            if (flags[numbers[i]]){
+                duplication[0] = numbers[i];
+                return true;
+            }
+            flags[numbers[i]] = true;
+        }
+        return false;
+    }
+    public int[] multiply(int[] A) {
+        int multi = 1,index = 0;
+        int[] B = new int[A.length];
+        int[] C = new int[A.length];
+        for (int i = 0;i < A.length;i++){
+            B[i] = multi;
+            multi *= A[i];
+        }
+        multi = 1;
+        for (int i = A.length-1;i >= 0;i--){
+            C[i] = multi;
+            multi *= A[i];
+        }
+        for (int i = 0;i < A.length;i++){
+            B[i] *= C[i];
+        }
+        return B;
+    }
+    //腾讯
+    public long SongList2(int k,int a,int x,int b,int y){
+        int mod = 1000000007;
+        long[] dp = new long[k+1];
+        dp[0] = 1;
+        for (int i = 0;i < x;i++){
+            for (int j = k;j >= a;j--){
+                dp[j] = (dp[j]%mod + dp[j-a]%mod)%mod;
+            }
+        }
+        for (int i = 0;i < y;i++){
+            for (int j = k;j >= b;j--){
+                dp[j] = (dp[j]%mod + dp[j-b]%mod)%mod;
+            }
+        }
+        return dp[k]%mod;
+    }
+    public int Chocolate(int n,int m){
+        int min = 1,max = m,mid=1;
+        int total;
+        while (min < max){
+            mid = (int) Math.ceil((min+max)*0.5);
+            total = TotalChocolate(mid,n);
+            if (total > m){
+                max = mid-1;
+            }else if (total < m){
+                min = mid;
+            }else
+                return mid;
+        }
+        return min;
+    }
+    public int MinBrushstroke(int n,int m,char[][] board){
+        int[][] dir = {{-1,1},{1,1}};
+        int res = 0;
+        for (int i = 0,j = 0;i <m && j < n;){
+            res += _s(i,j,m,n,board,dir,0,'B');
+            j = (i == m-1)?j+1:0;
+            i = (i == m-1)?m-1:i+1;
+        }
+        for (int i = m-1,j = 0;i < m && j < n;){
+            res += _s(i,j,m,n,board,dir,1,'Y');
+            j = (i == 0)?j+1:0;
+            i = (i == 0)?0:i-1;
+        }
+        return res;
+    }
+    int _s(int i,int j,int m,int n,char[][] board,int[][] dir,int f,char c){
+        int x = i,y = j,res = 0;
+        boolean flag = false;
+        while (!outOfBound(x,y,m,n)){
+            if (board[y][x] != c && board[y][x] != 'G'){
+                flag = false;
+            }else {
+                if (!flag) res++;
+                flag = true;
+            }
+            x += dir[f][0];
+            y += dir[f][1];
+        }
+        return res;
+    }
+    public int gameTaskCheck(int task1,int task2,int[] tasks){
+        int n = (task1-1)/32,m = 31-((task1-1)%32);
+        long offset = (long)Math.pow(2,m);
+        tasks[n] |= offset;
+        n = (task2-1)/32;
+        m = 31-(task2-1)%32;
+        offset = (long) Math.pow(2,m);
+        int tmp = tasks[n];
+        tmp &= offset;
+        if (tmp == 0)
+            return -1;
+        return 1;
+    }
+    public int getOddSum(int n){
+        int sum = 0;
+        for (int i = 1;i <= n/2;i++){
+            if (isOdd(i) && isOdd(n-i)) sum++;
+        }
+        return sum;
+    }
+    boolean isOdd(int n){
+        for (int i = 2;i < n;i++){
+            if (n % i == 0)
+                return false;
+        }
+        return true;
+    }
+    public String GeoHash(int n){
+        StringBuilder builder = new StringBuilder();
+        int max = 90,min = -90;
+        for (int i = 1;i <= 6;i++){
+            int mid = (max + min)/2;
+            if (n < mid){
+                builder.append('0');
+                max = mid;
+            }else {
+                builder.append('1');
+                min = mid;
+            }
+        }
+        return builder.toString();
+    }
 
 //    public ArrayList<ArrayList<Integer>> FindPath(TreeNode root,int target) {
-//        Stack<TreeNode> nodes = new Stack<>();
+//        Stack<TreeNode> Nodes = new Stack<>();
 //        LinkedList<Integer> nums = new LinkedList<>();
 //        ArrayList<ArrayList<Integer>> res = new ArrayList<>();
 //
-//        nodes.push(root);
+//        Nodes.push(root);
 //        TreeNode p;
 //        int total = 0;
 //        ArrayList<Integer> item = new ArrayList<>();
-//        while (!nodes.isEmpty()){
-//            p = nodes.pop();
+//        while (!Nodes.isEmpty()){
+//            p = Nodes.pop();
 //            if (p.val < target-total){
 //                nums.addLast(p.val);
 //                p = p.left;
@@ -665,7 +1004,26 @@ class Solution {
 //        return res;
 //    }
 
-
+    int TotalChocolate(int k,int n){
+        int tmp = k,res = 0;
+        for (int i = 1;i <= n;i++){
+            res += tmp;
+            tmp = (int) Math.ceil(tmp*0.5);
+        }
+        return res;
+    }
+    double C_mn(int m,int n){
+        return (factorial(n)/(factorial(m)*factorial(n-m)))%1000000007;
+    }
+    double factorial(int n){
+        if (n==0)
+            return 1;
+        double res = 1;
+        for (int i = 1;i <= n;i++){
+            res *= i;
+        }
+        return res;
+    }
     int less(int N){
         switch (N){
             case 0:
@@ -746,7 +1104,7 @@ class Solution {
         dfs(matrix,x,y,dir,res);
     }
     boolean outOfBound(int x,int y,int lenX,int lenY){
-        boolean flag =x >= lenX || y >= lenY || x < 0 || y < 0;
+        boolean flag = (x >= lenX || y >= lenY || x < 0 || y < 0);
         return flag;
     }
     //
@@ -774,9 +1132,51 @@ class Solution {
     }
 
 }
+class Debug{
+    public static void main(String[] args) {
+        Solution solution = new Solution();
+        int[] a = {12,24,8,32};
+        int[] b = {13,25,32,11};
+        String[] strings = {"Hello","Alaska","Dad","Peace"};
+        for (String s: solution.findWords(strings)){
+            System.out.println(s);
+        }
+        System.out.println("finish");
+    }
+}
+class NumArray {
 
+    int[] list;
+    int[] sums;
+    int length;
+    public NumArray(int[] nums) {
+        length = nums.length;
+        if (length > 0){
+            list = nums;
+            sums = new int[nums.length];
+            sums[0] = nums[0];
+            for (int i = 1;i < nums.length;i++){
+                sums[i] = sums[i-1] + nums[i];
+            }
+        }
+    }
 
+    public void update(int i, int val) {
+        if (i < length){
+            int sub = val - list[i];
+            list[i] = val;
+            for (int index = i;index < list.length;index++){
+                sums[index] += sub;
+            }
+        }
+    }
 
+    public int sumRange(int i, int j) {
+        if (i < length && j < length)
+            return  sums[j] - sums[i] + list[i];
+        else return 0;
+    }
+}
 
 
 

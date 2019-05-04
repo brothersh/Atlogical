@@ -18,7 +18,7 @@ public class MergeSort {
         int i = left,j = mid+1;
         int index = 0;
         while (i <= mid && j <= right){
-            if (list[i].compareTo(list[j]) == -1){
+            if (list[i].compareTo(list[j]) < 0){
                 tmp[index++] = list[i++];
             }else {
                 tmp[index++] = list[j++];

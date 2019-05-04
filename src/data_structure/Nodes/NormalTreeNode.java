@@ -1,4 +1,4 @@
-package data_structure.nodes;
+package data_structure.Nodes;
 
 /**
  * @Author: BrotherSh

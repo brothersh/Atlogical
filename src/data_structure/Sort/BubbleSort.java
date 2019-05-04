@@ -13,7 +13,7 @@ public class BubbleSort {
         do {
             flag = false;
             for (int i = 0;i < list.length-1;i++){
-                if (list[i].compareTo(list[i+1]) == 1){
+                if (list[i].compareTo(list[i+1]) > 0){
                     flag = true;
                     T tmp = list[i];
                     list[i] = list[i+1];
